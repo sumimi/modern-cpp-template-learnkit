@@ -303,7 +303,56 @@ cmake --build build --target coverage
 
 ---
 
-## 📖 プロジェクトから始めるには？
+## �️ 開発環境のセットアップ
+
+### Gitコミットメッセージテンプレートの設定
+
+このプロジェクトでは、Semantic Commit Messages + Gitmoji 形式でコミットメッセージを統一しています。
+
+#### 設定方法
+
+```bash
+git config commit.template .gitmessage
+```
+
+または、グローバル設定にする場合：
+
+```bash
+git config --global commit.template /path/to/modern-cpp-template-learnkit/.gitmessage
+```
+
+#### コミットメッセージ形式
+
+```
+<type>: :<emoji>: <1文の日本語で説明>
+```
+
+**例：**
+- `feat: :sparkles: ユーザー登録機能を追加`
+- `fix: :bug: メモリリーク問題を修正`
+- `docs: :memo: READMEを更新`
+
+詳細は `.github/copilot-instructions.md` または [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
+### GitHub Copilot の利用
+
+このプロジェクトには `.github/copilot-instructions.md` が含まれており、GitHub Copilot が自動的にプロジェクトの規約を参照します。
+
+VS Code で GitHub Copilot を使用している場合、コミットメッセージやコードの提案時に自動的にプロジェクトの規約に従った提案をしてくれます。
+
+### エディタ設定
+
+`.editorconfig` ファイルが含まれており、以下の設定が自動適用されます：
+
+- **C++ファイル**: スペース4つのインデント
+- **CMake/YAML/JSON**: スペース2つのインデント
+- **UTF-8エンコーディング**、LF改行コード
+
+主要なエディタ（VS Code、CLion、Vim、Emacs など）は `.editorconfig` を自動認識します。
+
+---
+
+## �📖 プロジェクトから始めるには？
 
 このテンプレートを使って新規プロジェクトを始めるには：
 
@@ -340,6 +389,8 @@ cmake --build build --target coverage
 
 ```
 modern-cpp-template-learnkit/
+├── .github/              # GitHub関連設定
+│   └── copilot-instructions.md  # GitHub Copilot用指示ファイル
 ├── include/              # ヘッダファイル群（*.hpp）
 │   ├── sampleapp/        # サンプルアプリケーション
 │   │   ├── AppController.hpp
@@ -371,7 +422,10 @@ modern-cpp-template-learnkit/
 │   ├── Doxyfile          # Doxygen設定
 │   ├── SETUP_GUIDE.md    # セットアップガイド
 │   └── html/             # Doxygen 出力先（自動生成）
+├── .editorconfig         # エディタ設定（コードスタイル統一）
+├── .gitmessage           # Gitコミットメッセージテンプレート
 ├── CMakeLists.txt        # ルートCMake設定
+├── CONTRIBUTING.md       # コントリビューションガイド
 ├── README.md             # プロジェクト説明
 └── LICENSE               # ライセンス（MIT）
 ```

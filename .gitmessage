@@ -1,0 +1,25 @@
+# <type>: :<emoji>: <1文の日本語で説明>
+#
+# 例:
+# feat: :sparkles: プロジェクト検索機能を追加
+# fix: :bug: 表示エラーを修正
+# docs: :memo: READMEを更新
+#
+# タイプ:
+#   feat     (:sparkles:)          新機能追加
+#   fix      (:bug:)               バグ修正
+#   docs     (:memo:)              ドキュメント更新
+#   style    (:art:)               コードフォーマット
+#   refactor (:recycle:)           リファクタリング
+#   perf     (:zap:)               パフォーマンス改善
+#   test     (:white_check_mark:)  テスト追加・修正
+#   build    (:package:)           ビルドシステム変更
+#   ci       (:construction_worker:) CI設定変更
+#   chore    (:wrench:)            設定ファイル変更
+#   security (:lock:)              セキュリティ修正
+#
+# その他のGitmoji:
+#   :fire:       コード/ファイル削除
+#   :lipstick:   UI/スタイル更新
+#   :pencil2:    タイポ修正
+#   :rewind:     コミット取り消し
