@@ -1,0 +1,11 @@
+PROJECT_NAME = ModernCppProject
+OUTPUT_DIRECTORY = docs/html
+INPUT = include src test README.md
+RECURSIVE = YES
+GENERATE_HTML = YES
+OUTPUT_LANGUAGE = Japanese
+USE_MDFILE_AS_MAINPAGE = README.md
+HTML_EXTRA_STYLESHEET = docs/doxyfiles/DoxyCustom.css
+
+EXCLUDE = include/cxxopts \
+          include/nlohmann

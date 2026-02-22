@@ -1,0 +1,12 @@
+# .clang-format - Google C++ Style Guide 準拠
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 120
+AllowShortFunctionsOnASingleLine: InlineOnly
+DerivePointerAlignment: false
+PointerAlignment: Left
+SortIncludes: true
+ReflowComments: true
+BreakBeforeBraces: Attach

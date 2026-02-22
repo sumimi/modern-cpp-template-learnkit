@@ -1,0 +1,39 @@
+# -----------------------------
+# .gitignore - ModernCppProject
+# -----------------------------
+# 本テンプレートにおけるビルド生成物・一時ファイル・ログ類を除外するための設定です。
+
+# CMake ビルドディレクトリ（主に out-of-source）
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/Makefile
+/install_manifest.txt
+
+# Doxygen 自動生成ドキュメント
+/docs/html/
+
+# lcov カバレッジ情報
+*.info
+*.gcda
+*.gcno
+
+# Clang-Tidy / Valgrind / その他ログ
+*.log
+
+# CTest 実行後に生成される一時データ
+/Testing/
+
+# テスト・カバレッジ・ドキュメントレポート出力先（ビルド内）
+/build/coverage_report/
+/build/test_report/
+
+# ログ出力先
+/logs/
+
+# ユーザー特有のエディタ・IDE設定（任意で拡張可）
+*.swp
+*.swo
+*.DS_Store
+.vscode/
+.idea/
