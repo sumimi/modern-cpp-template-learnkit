@@ -76,7 +76,8 @@ ctest --test-dir "$BUILD_DIR" --output-on-failure
 echo "📈 カバレッジデータを収集中..."
 
 # src/ 以下の gcda/gcno に対応するため明示的にサブディレクトリも指定
-lcov --capture --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_INFO"
+# --ignore-errors mismatch: GCC最適化による行番号不一致を無視
+lcov --capture --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_INFO" --ignore-errors mismatch
 
 #==============================================================================
 # 不要ファイル除外（標準ライブラリ等）
@@ -87,6 +88,7 @@ lcov --remove "$BUILD_DIR/$COVERAGE_INFO" \
     '*/c++/*' \
     '*/cxxopts/*' \
     '*/test/*' \
+    --ignore-errors mismatch,unused \
     -o "$BUILD_DIR/$FILTERED_INFO"
 
 #==============================================================================
