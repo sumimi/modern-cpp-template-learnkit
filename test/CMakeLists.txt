@@ -10,9 +10,6 @@
 set(CMAKE_PREFIX_PATH "/opt/gtest/gtest-1.14")
 find_package(GTest REQUIRED)
 
-# spdlog ログ出力ライブラリを検出
-find_package(spdlog REQUIRED)
-
 # カバレッジ用スクリプトの読み込み（GCC + ENABLE_COVERAGE 用）
 include(${CMAKE_SOURCE_DIR}/tools/coverage.cmake)
 
