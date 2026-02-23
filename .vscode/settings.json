@@ -82,5 +82,13 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
-    }
+    },
+    // コミットメッセージ生成専用の指示（✨ ボタンによる生成にのみ適用）
+    // copilot-instructions.md への準拠を強調する補強役として使用します
+    // フォーマットの定義・変更は copilot-instructions.md のみで行ってください
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "コミットメッセージは copilot-instructions.md に定義されたフォーマットに厳密に従ってください。形式に合わない出力は不可とします。"
+        }
+    ]
 }

@@ -17,9 +17,15 @@
 #   ci       (:construction_worker:) CI設定変更
 #   chore    (:wrench:)            設定ファイル変更
 #   security (:lock:)              セキュリティ修正
+#   init     (:tada:)              初期コミット
 #
 # その他のGitmoji:
 #   :fire:       コード/ファイル削除
-#   :lipstick:   UI/スタイル更新
 #   :pencil2:    タイポ修正
 #   :rewind:     コミット取り消し
+#   :green_heart: CI修正
+#   :arrow_up:   依存関係アップグレード（CMake, vcpkg など）
+#   :arrow_down: 依存関係ダウングレード
+#   :pushpin:    依存関係を特定バージョンに固定
+#
+# 参考: https://gitmoji.dev/

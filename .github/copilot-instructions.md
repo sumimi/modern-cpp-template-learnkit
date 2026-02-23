@@ -6,7 +6,7 @@
 
 ### フォーマット
 ```
-<type>: :<emoji>: <description>
+<type>: :<emoji>: <1文の日本語で説明>
 ```
 
 - **type**: Semantic Commit Messagesの接頭辞（feat, fix, docs, など）
@@ -33,20 +33,12 @@
 ### その他の便利なGitmoji
 
 - `:fire:` - コード/ファイル削除
-- `:lipstick:` - UI/スタイル更新
-- `:wheelchair:` - アクセシビリティ改善
-- `:green_heart:` - CI修正
-- `:arrow_up:` - 依存関係アップグレード
-- `:arrow_down:` - 依存関係ダウングレード
-- `:pushpin:` - 依存関係を特定バージョンに固定
 - `:pencil2:` - タイポ修正
 - `:rewind:` - コミット取り消し
-
-## コーディング規約
-
-- JavaScriptでは厳格な型チェックとエスケープ処理を実施
-- セキュリティを最優先（XSS対策、URLサニタイズなど）
-- Pythonではデータバリデーションを必ず実装
+- `:green_heart:` - CI修正
+- `:arrow_up:` - 依存関係アップグレード（CMake, vcpkg など）
+- `:arrow_down:` - 依存関係ダウングレード
+- `:pushpin:` - 依存関係を特定バージョンに固定
 
 ## 参考
 
