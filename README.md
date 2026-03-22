@@ -340,6 +340,8 @@ git config --global commit.template /path/to/modern-cpp-template-learnkit/.gitme
 
 VS Code で GitHub Copilot を使用している場合、コミットメッセージやコードの提案時に自動的にプロジェクトの規約に従った提案をしてくれます。
 
+Agent Skills・カスタムエージェント・ガバナンス Hook の詳細については、[modern-cpp-agent-skills](https://github.com/sumimi/modern-cpp-agent-skills) を参照してください。
+
 ### エディタ設定
 
 `.editorconfig` ファイルが含まれており、以下の設定が自動適用されます：
@@ -443,6 +445,9 @@ modern-cpp-template-learnkit/
 
 ### プロジェクト固有ドキュメント
 * **[セットアップガイド（SETUP_GUIDE.md）](docs/SETUP_GUIDE.md)** - 詳細なセットアップ手順と設定方法
+
+### 関連リポジトリ
+* **[modern-cpp-agent-skills](https://github.com/sumimi/modern-cpp-agent-skills)** - このテンプレートに組み込まれた Agent Skills・カスタムエージェント・ガバナンス Hook の開発元リポジトリ
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "linux": "./.github/hooks/governance-audit.sh",
+        "osx": "./.github/hooks/governance-audit.sh",
+        "timeout": 30
+      }
+    ]
+  }
+}

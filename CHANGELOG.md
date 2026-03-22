@@ -7,6 +7,30 @@
 
 ---
 
+## [1.1.0] - 2026-03-22
+
+> 本バージョンの Agent Skills・カスタムエージェント・ガバナンス Hook は、
+> 別リポジトリ [modern-cpp-agent-skills](https://github.com/sumimi/modern-cpp-agent-skills) で開発した成果をマージしたものです。
+
+### 追加
+- `AGENTS.md` を追加（AI エージェント向けリポジトリ操作ガイド）
+- `.github/copilot-instructions.md` を全面刷新（プロジェクト規約・スキル一覧・ビルドコマンド早見表・コーディング規約等を大幅拡充）
+- Agent Skills 7種を追加（`.github/skills/` 配下）
+  - `cpp-architecture`：3層アーキテクチャ・依存性注入パターンガイド
+  - `cpp-cmake`：CMake ビルド設定とカスタムターゲットガイド
+  - `cpp-docs`：Doxygen ドキュメンテーションコメント規約
+  - `cpp-format`：clang-format / clang-tidy コード品質管理ガイド
+  - `cpp-googletest`：Google Test / Mock ユニットテストベストプラクティス
+  - `cpp-modern-cpp`：C++17 モダン記法・設計パターンガイド
+  - `git-commit`：Semantic Commits + Gitmoji コミットメッセージ作成ガイド
+- カスタムエージェント2種を追加（`.github/agents/` 配下）
+  - `C++ Code Reviewer`：設計・規約・セキュリティ・テスタビリティの多角的レビューエージェント
+  - `C++ Debugger`：valgrind / AddressSanitizer / GDB を活用したデバッグ支援エージェント
+- `.github/hooks/governance-audit.json` を追加（PostToolUse Hook 設定）
+- `.github/hooks/governance-audit.sh` を追加（`.cpp`/`.hpp` 編集後に C++ 規約違反を自動検出するガバナンス監査スクリプト）
+
+---
+
 ## [1.0.1] - 2026-02-22
 
 ### 追加
