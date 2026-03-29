@@ -67,6 +67,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # -----------------------------------------------------------------------------
+# IntelliSense 向け compile_commands.json の生成
+# -----------------------------------------------------------------------------
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# -----------------------------------------------------------------------------
 # clang-tidy静的解析設定
 # （clang-tidyが存在する場合、ビルド時に自動チェック）
 # -----------------------------------------------------------------------------

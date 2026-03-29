@@ -7,6 +7,14 @@
 
 ---
 
+## [1.2.1] - 2026-03-29
+
+### 変更
+- `CMakeLists.txt`：`CMAKE_EXPORT_COMPILE_COMMANDS ON` を追加（`build/compile_commands.json` を自動生成）
+- `.vscode/c_cpp_properties.json`：`includePath` を廃止し `compileCommands` 参照に変更（IntelliSense がパッケージのインクルードパスを自動解決するように修正）
+
+---
+
 ## [1.2.0] - 2026-03-29
 
 ### 追加
