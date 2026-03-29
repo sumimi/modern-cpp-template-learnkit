@@ -17,15 +17,15 @@
 #   - clean_all によるビルド成果物の一括削除
 #
 # カスタムターゲット（以下のコマンドで実行）:
-#   cmake -S . -B build                                # 初期構成
-#   cmake --build build                                # ビルド
-#   cmake --build build --target run_tests             # ユニットテストの実行
-#   cmake --build build --target test_report           # テスト結果HTMLレポート生成
-#   cmake --build build --target coverage              # カバレッジ測定とHTML出力 (SETUP_GUIDE.mdを参照)
-#   cmake --build build --target doc                   # ドキュメント生成
-#   cmake --build build --target clang_tidy            # 静的解析の実行
-#   cmake --build build --target valgrind              # メモリリーク検出
-#   cmake --build build --target clean_all             # 全成果物の削除
+#   cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake  # 初期構成
+#   cmake --build build                                                      # ビルド
+#   cmake --build build --target run_tests                                   # ユニットテストの実行
+#   cmake --build build --target test_report                                 # テスト結果HTMLレポート生成
+#   cmake --build build --target coverage                                    # カバレッジ測定とHTML出力 (SETUP_GUIDE.mdを参照)
+#   cmake --build build --target doc                                         # ドキュメント生成
+#   cmake --build build --target clang_tidy                                  # 静的解析の実行
+#   cmake --build build --target valgrind                                    # メモリリーク検出
+#   cmake --build build --target clean_all                                   # 全成果物の削除
 #
 # ディレクトリ構成（推奨）:
 #   project_root/
@@ -50,6 +50,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(ModernCppProject VERSION 1.0.0 LANGUAGES CXX)
 
+# -----------------------------------------------------------------------------
+# CMAKE_BUILD_TYPE のデフォルト設定
+# Conan CMakeDeps が生成するファイルは CMAKE_BUILD_TYPE の設定を必須とする。
+# 未指定の場合は Release をデフォルトとして設定する。
+# -----------------------------------------------------------------------------
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 # ----------------------------------------------------------------------------- 
 # ライブラリ形式の選択肢：STATIC or SHARED（デフォルトは STATIC） 
 #
@@ -59,26 +69,9 @@ project(ModernCppProject VERSION 1.0.0 LANGUAGES CXX)
 option(BUILD_SHARED_LIBS "Build libraries as shared (DLL) or static" OFF)
 
 # -----------------------------------------------------------------------------
-# 出力先ディレクトリ設定
-# （アーカイブ(lib), ライブラリ(lib), 実行バイナリ(bin)）
-# -----------------------------------------------------------------------------
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# -----------------------------------------------------------------------------
 # IntelliSense 向け compile_commands.json の生成
 # -----------------------------------------------------------------------------
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# -----------------------------------------------------------------------------
-# clang-tidy静的解析設定
-# （clang-tidyが存在する場合、ビルド時に自動チェック）
-# -----------------------------------------------------------------------------
-find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
-if(CLANG_TIDY_EXE)
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-endif()
 
 # =============================================================================
 # Conan vendor パッケージ設定
@@ -103,6 +96,23 @@ find_package(cxxopts REQUIRED)
 find_package(libpqxx REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(libsodium REQUIRED)
+
+# -----------------------------------------------------------------------------
+# 出力先ディレクトリ設定
+# （アーカイブ(lib), ライブラリ(lib), 実行バイナリ(bin)）
+# -----------------------------------------------------------------------------
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# -----------------------------------------------------------------------------
+# clang-tidy静的解析設定
+# （clang-tidyが存在する場合、ビルド時に自動チェック）
+# -----------------------------------------------------------------------------
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+if(CLANG_TIDY_EXE)
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+endif()
 
 # -----------------------------------------------------------------------------
 # テスト有効化

@@ -288,7 +288,7 @@ ls /opt/gtest/gtest-1.14/lib*/libgtest*.a
 export CMAKE_PREFIX_PATH=/opt/gtest/gtest-1.14
 
 # 再度CMakeを実行
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 ```
 
 #### コンパイルエラー（C++17非対応）
@@ -381,7 +381,7 @@ PROJECT_BRIEF          = "次世代C++ツールのドキュメント"
 
 ```bash
 # ビルド環境の構築
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 
 # ビルド実行
 cmake --build build
@@ -431,7 +431,7 @@ cmake --build build --target test_report
 cmake --build build --target clean_all
 
 # 2. カバレッジ有効でCMake構成
-cmake -DENABLE_COVERAGE=ON -S . -B build
+cmake -DENABLE_COVERAGE=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 
 # 3. ビルド＆テスト実行
 cmake --build build

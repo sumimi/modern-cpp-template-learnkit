@@ -5,7 +5,7 @@
 本プロジェクトでは **Conan 2.x** を使用して C++ の外部ライブラリを管理します。  
 取得したパッケージは **`vendor/`** ディレクトリに展開し、git で管理（vendor 化）します。
 
-これにより、**初回セットアップ後は Conan なしでビルド**できる自己完結型の環境を実現します。
+`vendor/` はリポジトリにコミット済みのため、クローン直後から **Conan なしでビルド**できます。
 
 ---
 
@@ -32,7 +32,7 @@
 
 ---
 
-## 初回セットアップ手順
+## パッケージ追加・更新手順
 
 > **注意:** このセットアップは「パッケージを追加・更新するとき」のみ実行します。  
 > 通常の開発者は「[通常のビルド手順](#通常のビルド手順)」のみを使用します。
@@ -54,11 +54,11 @@ bash tools/conan_setup.sh
 
 ```bash
 git add vendor/
-git commit -m "build: :package: Conan vendor パッケージを追加"
+git commit -m "build: :package: Conan vendor パッケージを更新"
 ```
 
 > `vendor/full_deploy/` にパッケージのヘッダ・ライブラリが含まれます。  
-> これを git で管理することで、以降は **Conan 不要でビルド**できます。
+> `vendor/` を git で管理しているため、コミット後は他の開発者も **Conan 不要でビルド**できます。
 
 > **⚠️ 再実行時の注意（べき等性について）**  
 > `bash tools/conan_setup.sh` は何度実行しても安全ですが、`vendor/` の内容は毎回**上書き**されます。  
@@ -112,20 +112,22 @@ project_root/
 
 ### vendor/ の CMake 統合の仕組み
 
-`CMakeLists.txt` は以下のロジックで vendor パッケージを自動検出します：
+`conan install` により `vendor/conan_toolchain.cmake` と各パッケージの `*Config.cmake` が生成されます。  
+cmake 構成時にツールチェーンファイルを指定することで、`find_package` がこれらを自動解決します：
 
-```cmake
-# vendor/full_deploy/host/<pkg>/<version>/ を CMAKE_PREFIX_PATH に追加
-file(GLOB CONAN_VENDOR_DIRS "${CMAKE_SOURCE_DIR}/vendor/full_deploy/host/*/*")
-list(PREPEND CMAKE_PREFIX_PATH ${CONAN_VENDOR_DIRS})
-
-# cmake/ 配下のカスタム Find モジュールを有効化（cmake/FindSodium.cmake 等）
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+```bash
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 ```
 
-`spdlog`・`cxxopts`・`nlohmann_json`・`libpqxx` は自身の cmake config ファイルを同桁するため  
-`find_package` で直接解決されます。  
-`libsodium` は cmake config を同桁しないため、`cmake/FindSodium.cmake` カスタムファインダー経由で解決します。
+`CMakeLists.txt` 側では以下のように `find_package` を呼ぶだけで全パッケージが利用可能になります：
+
+```cmake
+find_package(spdlog REQUIRED)
+find_package(cxxopts REQUIRED)
+find_package(libpqxx REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(libsodium REQUIRED)
+```
 
 ---
 
@@ -136,11 +138,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 | パッケージ | タイプ | バイナリへの同桁 |
 |---------|------|----------------|
-| `spdlog` | コンパイル済みライブラリ | `.a` がリンク時に埋め込まれる |
-| `cxxopts` | header-only | ビルド時にコンパイルされ埋め込まれる |
-| `nlohmann_json` | header-only | ビルド時にコンパイルされ埋め込まれる |
-| `libsodium` | コンパイル済みライブラリ | `.a` がリンク時に埋め込まれる |
-| `libpqxx` | コンパイル済みライブラリ | `.a` がリンク時に埋め込まれる |
+| `spdlog` | コンパイル済みライブラリ | `.a` がリンク時に同梱される |
+| `cxxopts` | header-only | ビルド時にコンパイルされ同梱される |
+| `nlohmann_json` | header-only | ビルド時にコンパイルされ同梱される |
+| `libsodium` | コンパイル済みライブラリ | `.a` がリンク時に同梱される |
+| `libpqxx` | コンパイル済みライブラリ | `.a` がリンク時に同梱される |
 
 > **注意: libpqxx の libpq 依存について**  
 > `libpqxx` は内部で PostgreSQL の C クライアントライブラリ（`libpq`）を利用します。  
@@ -225,8 +227,8 @@ Conan バージョンを更新する場合：
 CMake Error: [Conan] vendor/full_deploy が見つかりません。
 ```
 
-**原因:** `vendor/` が設定されていない（初回クローン直後など）  
-**対処:** `bash tools/conan_setup.sh` を実行して `vendor/` をセットアップしてください。
+**原因:** `vendor/` が削除または破損している  
+**対処:** `bash tools/conan_setup.sh` を実行して `vendor/` を再生成してください。
 
 ---
 

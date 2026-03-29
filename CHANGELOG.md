@@ -7,6 +7,18 @@
 
 ---
 
+## [1.2.2] - 2026-03-29
+
+### 変更
+- `CMakeLists.txt`：`CMAKE_BUILD_TYPE` 未指定時に `Release` をデフォルト設定するよう追加（Conan CMakeDeps の必須設定への対応）
+- `CMakeLists.txt`：cmake 構成コマンドのコメントに `-DCMAKE_TOOLCHAIN_FILE` オプションを追記
+- `README.md`：関連リポジトリに `modern-cpp-conan-template` を追加
+- `docs/CONAN_SETUP.md`：Conan セットアップガイドを更新
+- `docs/SETUP_GUIDE.md`：セットアップガイドを更新
+- `tools/conan_setup.sh`：セットアップスクリプトを更新
+
+---
+
 ## [1.2.1] - 2026-03-29
 
 ### 変更

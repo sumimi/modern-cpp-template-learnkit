@@ -282,8 +282,8 @@ cmake --build build --target clean_all             # 成果物をすべて削除
 このテンプレートでは `ENABLE_COVERAGE=ON` を付けて CMake 構成を行うことで、カバレッジ測定を有効にできます。
 
 ```bash
-# 1. CMake構成（カバレッジ有効 + Conan toolchain 指定）
-cmake -DENABLE_COVERAGE=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
+# 1. CMake構成（カバレッジ有効 + RelWithDebInfo:デバッグ情報付き最適化ビルド + Conan toolchain 指定）
+cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 
 # 2. ビルド＆テスト
 cmake --build build
@@ -459,6 +459,7 @@ modern-cpp-template-learnkit/
 
 ### 関連リポジトリ
 * **[modern-cpp-agent-skills](https://github.com/sumimi/modern-cpp-agent-skills)** - このテンプレートに組み込まれた Agent Skills・カスタムエージェント・ガバナンス Hook の開発元リポジトリ
+* **[modern-cpp-conan-template](https://github.com/sumimi/modern-cpp-conan-template)** - このテンプレートに組み込まれた Conan 2.x パッケージ管理の開発元リポジトリ
 
 ---
 
