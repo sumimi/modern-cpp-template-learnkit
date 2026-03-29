@@ -7,6 +7,39 @@
 
 ---
 
+## [1.2.0] - 2026-03-29
+
+### 追加
+- Conan 2.7.1 による外部パッケージ管理を統合
+  - `conanfile.txt`：spdlog / libpqxx / cxxopts / nlohmann_json / libsodium の依存定義（static リンク）
+  - `requirements.txt`：Conan バージョン固定（`conan==2.7.1`）
+  - `profiles/linux-rhel9`：GCC 11 / x86_64 / RHEL9 向け Conan ビルドプロファイル
+  - `tools/conan_setup.sh`：パッケージ取得・vendor 展開スクリプト
+  - `docs/CONAN_SETUP.md`：Conan 導入・パッケージ管理・vendor 運用ガイド
+- `vendor/`：Conan パッケージの vendor 化（`full_deploy` + CMakeDeps 生成ファイル）
+  - `vendor/conan_toolchain.cmake`：CMake toolchain ファイル（`CMAKE_PREFIX_PATH` 設定）
+  - `vendor/full_deploy/host/`：spdlog / libpqxx / libpq / cxxopts / nlohmann_json / libsodium / fmt のヘッダ・静的ライブラリ（`.a`）
+  - `vendor/*Config.cmake` 等：`find_package` 解決用 CMakeDeps 生成ファイル
+  - `vendor/CMakePresets.json`：Conan 生成の CMake プリセット
+- `CMakeUserPresets.json`：`vendor/CMakePresets.json` を参照するユーザープリセット
+- `test/unit/packages/ConanPackagesTest.cpp`：全 5 パッケージの動作確認スモークテスト（11 テストケース）
+
+### 変更
+- `CMakeLists.txt`：Conan toolchain ベースの統合に変更
+  - `vendor/conan_toolchain.cmake` の存在チェックを追加（未セットアップ時に `FATAL_ERROR`）
+  - `find_package(spdlog / cxxopts / libpqxx / nlohmann_json / libsodium REQUIRED)` を追加
+  - cmake 構成コマンドに `-DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` が必須になった
+- `src/CMakeLists.txt`：`cxxopts::cxxopts` のリンクを追加
+- `src/main.cpp`：`#include "cxxopts/cxxopts.hpp"` → `#include <cxxopts.hpp>`（Conan 管理パスに変更）
+- `test/CMakeLists.txt`：全 5 パッケージを `unit_tests` ターゲットにリンク
+- `README.md`：Conan 2.x 対応を特長・クイックスタート・関連資料に追記
+- `.gitignore`：Conan キャッシュ（`.conan/`, `.conan2/` 等）を除外に追加
+
+### 削除
+- `include/cxxopts/cxxopts.hpp`：Conan 管理に移行（`vendor/full_deploy/` 配下に移動）
+
+---
+
 ## [1.1.0] - 2026-03-22
 
 > 本バージョンの Agent Skills・カスタムエージェント・ガバナンス Hook は、

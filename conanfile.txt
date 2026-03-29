@@ -1,0 +1,29 @@
+# =============================================================================
+# conanfile.txt — Conan 2.x パッケージ依存定義
+#
+# 管理パッケージ:
+#   - spdlog         : 高速ロギングライブラリ
+#   - libpqxx        : PostgreSQL C++ クライアントライブラリ
+#   - cxxopts        : コマンドライン引数パーサ（ヘッダオンリー）
+#   - nlohmann_json  : JSON パーサ・シリアライザ（ヘッダオンリー）
+#   - libsodium      : 暗号化・署名・ハッシュライブラリ
+#
+# 利用方法:
+#   bash tools/conan_setup.sh
+# =============================================================================
+
+[requires]
+spdlog/1.12.0
+libpqxx/7.7.5
+cxxopts/3.1.1
+nlohmann_json/3.11.3
+libsodium/1.0.20
+
+[generators]
+CMakeToolchain
+CMakeDeps
+
+[options]
+spdlog*:shared=False
+libpqxx*:shared=False
+libsodium*:shared=False

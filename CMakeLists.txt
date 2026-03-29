@@ -75,6 +75,30 @@ if(CLANG_TIDY_EXE)
     set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 endif()
 
+# =============================================================================
+# Conan vendor パッケージ設定
+#
+# vendor/conan_toolchain.cmake を使用して find_package を解決する。
+# cmake 構成時にツールチェーンファイルを指定すること：
+#   cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
+# 初回セットアップ: bash tools/conan_setup.sh を実行後、vendor/ を git commit。
+# 以降のビルドでは Conan 不要（詳細: docs/CONAN_SETUP.md）。
+# =============================================================================
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/vendor/conan_toolchain.cmake")
+    message(FATAL_ERROR
+        "[Conan] vendor/conan_toolchain.cmake が見つかりません。\n"
+        "以下のコマンドで初回セットアップを行ってください:\n"
+        "  bash tools/conan_setup.sh\n"
+        "詳細は docs/CONAN_SETUP.md を参照してください。"
+    )
+endif()
+
+find_package(spdlog REQUIRED)
+find_package(cxxopts REQUIRED)
+find_package(libpqxx REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(libsodium REQUIRED)
+
 # -----------------------------------------------------------------------------
 # テスト有効化
 # （Google Testを利用するためにCTestサポートを有効にする）

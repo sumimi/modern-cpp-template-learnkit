@@ -23,6 +23,7 @@ if(MAIN_SRC)
     target_link_libraries(main
         PRIVATE
             sampleapp
+            cxxopts::cxxopts
     )
 
     # カバレッジ取得のためのビルド拡張（GCC環境かつ ENABLE_COVERAGE オン時）

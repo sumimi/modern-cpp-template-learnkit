@@ -121,6 +121,7 @@ C++を学習する際、以下のような「学習を始める前の壁」に�
 - **C++17対応**： Modern C++の機能（ラムダ、auto、構造化束縛など）を学習できる
 - **CMake設定済み**： 複雑なビルド設定を考えず、すぐにビルド・実行可能
 - **複数ファイル構成**： ヘッダとソースの分離、モジュール化された構造を体験
+- **Conan 2.x 対応**： spdlog / libpqxx / cxxopts / nlohmann_json / libsodium を vendor 化して管理（初回セットアップ後は Conan 不要）
 
 ### 🧪 テスト環境が完備
 
@@ -252,10 +253,17 @@ C++を学習する際、以下のような「学習を始める前の壁」に�
 ### 基本的なビルドと実行
 
 ```bash
-cmake -S . -B build   # 初期設定
+# Conan toolchain を指定して cmake 構成（vendor/ がコミット済みの場合、Conan 不要）
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build   # ビルド実行
 ./build/bin/main      # 実行
 ```
+
+> **初回セットアップ（パッケージ追加・更新時のみ）:** Conan でパッケージを取得して `vendor/` を構築します。
+> 詳細は [docs/CONAN_SETUP.md](docs/CONAN_SETUP.md) を参照してください。
+> ```bash
+> bash tools/conan_setup.sh
+> ```
 
 ## 🔧 カスタムビルドターゲット
 
@@ -274,8 +282,8 @@ cmake --build build --target clean_all             # 成果物をすべて削除
 このテンプレートでは `ENABLE_COVERAGE=ON` を付けて CMake 構成を行うことで、カバレッジ測定を有効にできます。
 
 ```bash
-# 1. CMake構成（カバレッジ有効）
-cmake -DENABLE_COVERAGE=ON -S . -B build
+# 1. CMake構成（カバレッジ有効 + Conan toolchain 指定）
+cmake -DENABLE_COVERAGE=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 
 # 2. ビルド＆テスト
 cmake --build build
@@ -439,12 +447,15 @@ modern-cpp-template-learnkit/
 ### 公式ドキュメント
 * [GoogleTest](https://github.com/google/googletest) - C++テストフレームワーク
 * [CMake Documentation](https://cmake.org/documentation/) - ビルドシステム
+* [Conan 2.x Documentation](https://docs.conan.io/2/) - C++ パッケージマネージャ
+* [Conan Center Index](https://conan.io/center) - 公式パッケージ検索
 * [Doxygen](https://www.doxygen.nl/) - ドキュメント生成ツール
 * [lcov](https://github.com/linux-test-project/lcov) - カバレッジ測定ツール
 * [Valgrind](https://valgrind.org/) - メモリデバッグツール
 
 ### プロジェクト固有ドキュメント
 * **[セットアップガイド（SETUP_GUIDE.md）](docs/SETUP_GUIDE.md)** - 詳細なセットアップ手順と設定方法
+* **[Conan パッケージ管理ガイド（CONAN_SETUP.md）](docs/CONAN_SETUP.md)** - Conan 2.x の導入・パッケージ管理・vendor 運用手順
 
 ### 関連リポジトリ
 * **[modern-cpp-agent-skills](https://github.com/sumimi/modern-cpp-agent-skills)** - このテンプレートに組み込まれた Agent Skills・カスタムエージェント・ガバナンス Hook の開発元リポジトリ

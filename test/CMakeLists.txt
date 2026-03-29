@@ -38,6 +38,11 @@ target_link_libraries(unit_tests PRIVATE
     GTest::gmock
     GTest::gmock_main
     sampleapp
+    spdlog::spdlog
+    cxxopts::cxxopts
+    libpqxx::pqxx
+    nlohmann_json::nlohmann_json
+    libsodium::libsodium
 )
 
 enable_coverage_if_gcc(unit_tests)

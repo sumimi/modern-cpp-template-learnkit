@@ -1,0 +1,1 @@
+. "/home/rocky/git/github.com/sumimi/modern-cpp-template-learnkit/vendor/conanrunenv-release-x86_64.sh"

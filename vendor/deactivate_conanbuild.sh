@@ -1,0 +1,1 @@
+. "/home/rocky/git/github.com/sumimi/modern-cpp-template-learnkit/vendor/deactivate_conanbuildenv-release-x86_64.sh"

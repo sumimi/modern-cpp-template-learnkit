@@ -7,9 +7,9 @@
  * - ドメインロジックのサービスおよびコントローラの構築・実行
  */
 
+#include <cxxopts.hpp>
 #include <iostream>
 
-#include "cxxopts/cxxopts.hpp"
 #include "sampleapp/AppController.hpp"
 #include "sampleapp/UserRepository.hpp"
 #include "sampleapp/UserService.hpp"

@@ -1,0 +1,18 @@
+# =============================================================================
+# Conan ビルドプロファイル: RHEL9系 / GCC 11 / x86_64
+# =============================================================================
+
+[settings]
+os=Linux
+arch=x86_64
+compiler=gcc
+compiler.version=11
+compiler.libcxx=libstdc++11
+build_type=Release
+
+[options]
+*:shared=False
+
+[buildenv]
+CC=gcc
+CXX=g++

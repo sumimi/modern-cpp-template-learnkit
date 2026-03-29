@@ -36,3 +36,11 @@
 *.swo
 *.DS_Store
 .idea/
+
+# Conan 2.x パッケージマネージャ
+# ※ vendor/full_deploy/ は意図的に git 管理対象（vendor 化）
+.conan/
+.conan2/
+graph_info.json
+conaninfo.txt
+conanbuildinfo.cmake
