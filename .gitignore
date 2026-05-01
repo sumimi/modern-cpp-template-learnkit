@@ -44,3 +44,17 @@
 graph_info.json
 conaninfo.txt
 conanbuildinfo.cmake
+
+# vendor/ 配下の CMake ビルド成果物（conan install 出力とは別物）
+/vendor/.cmake/
+/vendor/CMakeFiles/
+/vendor/CMakeCache.txt
+/vendor/CMakeDoxyfile.in
+/vendor/CMakeDoxygenDefaults.cmake
+/vendor/CTestTestfile.cmake
+/vendor/Makefile
+/vendor/Testing/
+/vendor/compile_commands.json
+/vendor/cmake_install.cmake
+/vendor/src/
+/vendor/test/

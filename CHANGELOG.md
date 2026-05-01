@@ -7,6 +7,19 @@
 
 ---
 
+## [1.2.3] - 2026-05-01
+
+### 変更
+- `.gitignore`：`vendor/` 配下の CMake ビルド成果物を除外ルールに追加
+  - `vendor/.cmake/`（VS Code CMake Tools が生成するクエリ/レプライファイル）
+  - `vendor/CMakeFiles/`・`vendor/CMakeCache.txt`・`vendor/Makefile`（cmake が生成）
+  - `vendor/CMakeDoxyfile.in`・`vendor/CMakeDoxygenDefaults.cmake`（cmake が生成）
+  - `vendor/CTestTestfile.cmake`・`vendor/Testing/`（CTest が生成）
+  - `vendor/compile_commands.json`・`vendor/cmake_install.cmake`（cmake が生成）
+  - `vendor/src/`・`vendor/test/`（cmake のビルド成果物サブディレクトリ）
+
+---
+
 ## [1.2.2] - 2026-03-29
 
 ### 変更
