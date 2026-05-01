@@ -1,7 +1,7 @@
 ---
 name: 'C++ Debugger'
 description: 'C++ のバグ・クラッシュ・メモリ問題を valgrind / AddressSanitizer / GDB を活用して調査・解決する。'
-tools: ['codebase', 'runCommands', 'search', 'problems', 'terminalLastCommand', 'changes']
+tools: ['search/codebase', 'execute/getTerminalOutput', 'execute/runInTerminal', 'read/terminalLastCommand', 'read/terminalSelection', 'search', 'read/problems', 'read/terminalLastCommand', 'search/changes']
 ---
 
 # C++ デバッグ支援エージェント
@@ -13,7 +13,7 @@ tools: ['codebase', 'runCommands', 'search', 'problems', 'terminalLastCommand', 
 | ツール | 主な用途 | コマンド |
 |--------|---------|---------|
 | **valgrind** | メモリリーク・不正アクセス | `cmake --build build --target valgrind` |
-| **AddressSanitizer** | バッファオーバーフロー（高速） | `cmake -DENABLE_ASAN=ON -S . -B build` |
+| **AddressSanitizer** | バッファオーバーフロー（高速） | `cmake -DENABLE_ASAN=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` |
 | **UndefinedBehaviorSanitizer** | 未定義動作（整数オーバーフロー・NULL 参照等） | `-fsanitize=undefined` フラグ付きでビルド |
 | **GDB** | ハングアップ・クラッシュの追跡 | `gdb ./build/bin/main` |
 | **clang-tidy** | 静的解析（未定義動作の予防） | `cmake --build build --target clang_tidy` |
@@ -38,7 +38,7 @@ valgrind --leak-check=full --show-leak-kinds=all ./build/bin/main
 ### Step 3: AddressSanitizer で詳細を確認する（高速）
 
 ```bash
-cmake -DENABLE_ASAN=ON -S . -B build
+cmake -DENABLE_ASAN=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 ./build/bin/main
 ```
@@ -47,7 +47,7 @@ cmake --build build
 
 ```bash
 cmake -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
-      -DCMAKE_BUILD_TYPE=Debug -S . -B build
+      -DCMAKE_BUILD_TYPE=Debug -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 ./build/bin/main
 ```
@@ -60,7 +60,7 @@ GDB を使うにはデバッグシンボル付きビルドが必要です。
 
 ```bash
 # デバッグビルドで再構成
-cmake -DCMAKE_BUILD_TYPE=Debug -S . -B build
+cmake -DCMAKE_BUILD_TYPE=Debug -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 
 # ライブデバッグ

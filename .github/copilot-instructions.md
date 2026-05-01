@@ -29,6 +29,7 @@ Modern C++のベストプラクティス（テスト駆動開発・静的解析�
 | `cpp-format` | clang-format / clang-tidy によるコード品質管理 |
 | `cpp-docs` | Doxygen ドキュメンテーションコメントの記述規約 |
 | `cpp-googletest` | Google Test / Mock によるユニットテストの書き方 |
+| `cpp-coverage` | lcov/genhtml カバレッジ測定と LCOV 除外コメントの使用基準 |
 | `git-commit` | コミットメッセージの作成ガイド（Gitmoji 全種一覧含む） |
 
 ---
@@ -78,7 +79,7 @@ docs/               # Doxygen 設定・出力
 
 | 目的 | コマンド |
 |------|---------|
-| 初期設定 | `cmake -S . -B build` |
+| 初期設定 | `cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` |
 | ビルド | `cmake --build build` |
 | 実行 | `./build/bin/main` |
 | テスト実行 | `cmake --build build --target run_tests` |
@@ -88,7 +89,7 @@ docs/               # Doxygen 設定・出力
 | メモリチェック | `cmake --build build --target valgrind` |
 | 全成果物削除 | `cmake --build build --target clean_all` |
 
-カバレッジ測定には `cmake -DENABLE_COVERAGE=ON -S . -B build` で再構成が必要。
+カバレッジ測定には `cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` で再構成が必要。
 
 ---
 

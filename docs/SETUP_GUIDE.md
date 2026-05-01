@@ -10,7 +10,7 @@
 
 1. **セクション0を実施**：開発ツールとGoogleTestをインストール（初回のみ、必須）
 2. **テンプレートを複製**：`cp -r modern-cpp-template-learnkit my-study`
-3. **ビルド＆実行**：`cmake -S . -B build && cmake --build build && ./build/bin/main`
+3. **ビルド＆実行**：`cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake && cmake --build build && ./build/bin/main`
 4. **学習開始**：README.md の「活用シナリオ」を参考に学習を進める
 
 **セクション1～5は不要です**（プロジェクト名変更などは学習には必要ありません）。
@@ -314,6 +314,26 @@ rpm -q lcov valgrind
 sudo dnf install lcov valgrind -y
 ```
 
+#### C1（Branch Coverage）が表示されない
+
+```bash
+# lcov のバージョン確認（1.14以上を推奨）
+lcov --version | head -1
+
+# カバレッジ有効で再構成
+cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
+
+# カバレッジ再生成
+cmake --build build
+cmake --build build --target run_tests
+cmake --build build --target coverage
+```
+
+以下も確認してください。
+
+* リポジトリルートに `.lcovrc` が存在する
+* `build/coverage_report/index.html` に `Branch Coverage` が表示される
+
 ---
 
 ## 1. プロジェクトの複製とリネーム
@@ -426,12 +446,14 @@ cmake --build build --target test_report
 
 カバレッジ測定を行う場合は、**CMake構成時に専用オプションが必要**です：
 
+RelWithDebInfo を指定すると、最適化とデバッグ情報のバランスを保った状態でカバレッジ計測を実行できます。
+
 ```bash
 # 1. ビルド成果物をクリーンアップ
 cmake --build build --target clean_all
 
 # 2. カバレッジ有効でCMake構成
-cmake -DENABLE_COVERAGE=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
+cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 
 # 3. ビルド＆テスト実行
 cmake --build build
@@ -443,6 +465,11 @@ cmake --build build --target coverage
 # 5. レポート確認
 # build/coverage_report/index.html をブラウザで開く
 ```
+
+レポート確認時は、行カバレッジ（C0）だけでなく分岐カバレッジ（C1）も確認してください。
+
+* Top ページに `Branch Coverage` が表示される
+* 各ファイル詳細に `Branches` 列が表示される
 
 > **💡 ヒント**: カバレッジ測定の詳細な使い方は、README.md の「📈 カバレッジ測定の手順」を参照してください。
 

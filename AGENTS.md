@@ -36,7 +36,7 @@ AGENTS.md                           # このファイル（AI エージェント
 
 | 目的 | コマンド |
 |------|---------|
-| 初期設定 | `cmake -S . -B build` |
+| 初期設定 | `cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` |
 | ビルド | `cmake --build build` |
 | テスト実行 | `cmake --build build --target run_tests` |
 | 静的解析 | `cmake --build build --target clang_tidy` |

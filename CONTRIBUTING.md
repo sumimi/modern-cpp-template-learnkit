@@ -108,7 +108,7 @@ find src include test -name "*.cpp" -o -name "*.hpp" | xargs clang-format -i
 以下のコマンドでカバレッジを確認できます：
 
 ```bash
-cmake -DENABLE_COVERAGE=ON -S . -B build
+cmake -DENABLE_COVERAGE=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 cmake --build build --target coverage
 ```

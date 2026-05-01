@@ -1,7 +1,7 @@
 ---
 name: 'C++ Code Reviewer'
 description: 'C++17 コードを設計・品質・セキュリティ・テスト観点で多角的にレビューする。'
-tools: ['codebase', 'search', 'problems', 'changes', 'terminalLastCommand']
+tools: ['search/codebase', 'search', 'read/problems', 'search/changes', 'read/terminalLastCommand']
 ---
 
 # C++ コードレビュー専門エージェント
@@ -53,6 +53,18 @@ tools: ['codebase', 'search', 'problems', 'changes', 'terminalLastCommand']
 
 - バッファオーバーフロー・整数オーバーフローのリスク
 - ユーザー入力のバリデーション有無
+
+### 7. カバレッジ除外コメント（`cpp-coverage` スキル参照）
+
+`LCOV_EXCL_LINE` / `LCOV_EXCL_BR_LINE` / `LCOV_EXCL_START` 等が含まれる場合、以下を確認する：
+
+- テスト追加で到達できないことが確認されているか
+- コンパイラアーティファクト（仮想デストラクタ D0 / EH 分岐）か設計上到達不可能なパスか
+- マーカーの直前または同行に「なぜ除外するか」の理由コメントがあるか
+- `LCOV_EXCL_BR_LINE`（分岐のみ）で足りる場合に `LCOV_EXCL_LINE`（全除外）を使っていないか
+- `LCOV_EXCL_START/STOP` ブロックが最小範囲に絞られているか
+
+詳細な判断基準は `.github/skills/cpp-coverage/SKILL.md` を参照すること。
 
 ## レビュー手順
 

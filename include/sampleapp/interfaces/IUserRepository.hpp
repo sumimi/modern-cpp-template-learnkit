@@ -23,7 +23,7 @@ class IUserRepository {
      * @brief 仮想デストラクタです。
      * @details 派生クラスでのリソース解放を行うため、仮想デストラクタとしています。
      */
-    virtual ~IUserRepository() = default;
+    virtual ~IUserRepository() = default;  // LCOV_EXCL_LINE
 
     /**
      * @brief ユーザーを登録します。

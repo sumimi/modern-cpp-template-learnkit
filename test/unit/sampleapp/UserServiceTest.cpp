@@ -83,5 +83,44 @@ TEST(UserServiceTest, FindUserReturnsExpectedUser) {
     EXPECT_EQ(result.value(), expected);  // operator== が必要（User.hppに定義済）
 }
 
+/**
+ * @brief operator==() が異なる User 同士を正しく false と判定することを確認します。
+ *
+ * @details
+ * - テスト対象関数: sampleapp::operator==(const User&, const User&)
+ * - テスト目的: id / name / email のいずれか1つでも異なれば false を返すことを検証する
+ * - 検証方法: 各フィールドを1つだけ変えたユーザーと基準ユーザーを比較
+ */
+TEST(UserTest, OperatorEqualReturnsFalseForDifferentUsers) {
+    const User base{1, "Alice", "alice@example.com"};
+
+    // id が異なる場合
+    EXPECT_FALSE((base == User{2, "Alice", "alice@example.com"}));
+
+    // name が異なる場合
+    EXPECT_FALSE((base == User{1, "Bob", "alice@example.com"}));
+
+    // email が異なる場合
+    EXPECT_FALSE((base == User{1, "Alice", "bob@example.com"}));
+}
+
+/**
+ * @brief get_user_by_id() がユーザーが存在しない場合に std::nullopt を返すことを確認します。
+ *
+ * @details
+ * - テスト対象関数: UserService::get_user_by_id
+ * - テスト目的: リポジトリが nullopt を返す場合、サービスもそのまま nullopt を返すことを確認
+ */
+TEST(UserServiceTest, FindUserReturnsNulloptWhenNotFound) {
+    auto mockRepo = std::make_shared<MockUserRepository>();
+    UserService service(mockRepo);
+
+    EXPECT_CALL(*mockRepo, find_user_by_id(99)).WillOnce(Return(std::nullopt));
+
+    auto result = service.get_user_by_id(99);
+
+    EXPECT_FALSE(result.has_value());
+}
+
 }  // namespace
 }  // namespace sampleapp::test

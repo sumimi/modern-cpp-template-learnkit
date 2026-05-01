@@ -121,7 +121,7 @@ C++を学習する際、以下のような「学習を始める前の壁」に�
 - **C++17対応**： Modern C++の機能（ラムダ、auto、構造化束縛など）を学習できる
 - **CMake設定済み**： 複雑なビルド設定を考えず、すぐにビルド・実行可能
 - **複数ファイル構成**： ヘッダとソースの分離、モジュール化された構造を体験
-- **Conan 2.x 対応**： spdlog / libpqxx / cxxopts / nlohmann_json / libsodium を vendor 化して管理（初回セットアップ後は Conan 不要）
+- **Conan 2.x 対応**： spdlog / libpqxx / cxxopts / nlohmann_json / libsodium を vendor 化して管理（clone 直後に `tools/conan_setup.sh` で生成）
 
 ### 🧪 テスト環境が完備
 
@@ -253,17 +253,17 @@ C++を学習する際、以下のような「学習を始める前の壁」に�
 ### 基本的なビルドと実行
 
 ```bash
-# Conan toolchain を指定して cmake 構成（vendor/ がコミット済みの場合、Conan 不要）
+# 初回のみ: Conan 生成ファイルを作成
+bash tools/conan_setup.sh
+
+# 以降: Conan toolchain を指定して cmake 構成
 cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build   # ビルド実行
 ./build/bin/main      # 実行
 ```
 
-> **初回セットアップ（パッケージ追加・更新時のみ）:** Conan でパッケージを取得して `vendor/` を構築します。
+> **補足:** `bash tools/conan_setup.sh` は clone 直後に 1 回実行してください。依存パッケージを追加・更新した場合も再実行が必要です。
 > 詳細は [docs/CONAN_SETUP.md](docs/CONAN_SETUP.md) を参照してください。
-> ```bash
-> bash tools/conan_setup.sh
-> ```
 
 ## 🔧 カスタムビルドターゲット
 
@@ -308,6 +308,13 @@ cmake --build build --target coverage
   ```
 
 上記により `build/coverage_report/index.html` に HTML レポートが生成されます。
+
+このレポートでは、行カバレッジ（C0）に加えて分岐カバレッジ（C1）も確認できます。
+
+* Top ページに `Branch Coverage` が表示されること
+* 各ファイル詳細に `Branches` 列（例: `5/8 (62.5%)`）が表示されること
+
+> 補足: 本プロジェクトはルートの `.lcovrc` を使って branch coverage の既定値を管理しています。
 
 ---
 

@@ -60,6 +60,11 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+# Conan 生成ターゲットが Release のみを持つ場合でも、
+# RelWithDebInfo/MinSizeRel でリンクできるように構成をマップする。
+set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release)
+set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release)
+
 # ----------------------------------------------------------------------------- 
 # ライブラリ形式の選択肢：STATIC or SHARED（デフォルトは STATIC） 
 #

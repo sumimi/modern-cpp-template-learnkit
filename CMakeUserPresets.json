@@ -1,9 +1,33 @@
 {
-    "version": 4,
-    "vendor": {
-        "conan": {}
-    },
-    "include": [
-        "vendor/CMakePresets.json"
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default (build/)",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vendor/conan_toolchain.cmake"
+            },
+            "environment": {
+                "CXX": "g++",
+                "CC": "gcc"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "jobs": 16
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        }
     ]
 }

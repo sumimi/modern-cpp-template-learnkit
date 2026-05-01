@@ -5,7 +5,8 @@
 本プロジェクトでは **Conan 2.x** を使用して C++ の外部ライブラリを管理します。  
 取得したパッケージは **`vendor/`** ディレクトリに展開し、git で管理（vendor 化）します。
 
-`vendor/` はリポジトリにコミット済みのため、クローン直後から **Conan なしでビルド**できます。
+`vendor/full_deploy/` はリポジトリで管理し、Conan の自動生成ファイル（`vendor/conan_toolchain.cmake` など）は管理対象外としています。  
+そのため、**クローン直後に `bash tools/conan_setup.sh` の実行が必要**です。
 
 ---
 
@@ -34,8 +35,8 @@
 
 ## パッケージ追加・更新手順
 
-> **注意:** このセットアップは「パッケージを追加・更新するとき」のみ実行します。  
-> 通常の開発者は「[通常のビルド手順](#通常のビルド手順)」のみを使用します。
+> **注意:** このセットアップは **クローン直後に 1 回**実行してください。  
+> また、パッケージを追加・更新したときも再実行が必要です。
 
 ### 1. セットアップスクリプトを実行する
 
@@ -73,7 +74,7 @@ git commit -m "build: :package: Conan vendor パッケージを更新"
 
 ## 通常のビルド手順
 
-`vendor/` がコミット済みの場合、Conan は不要です。
+クローン直後に `bash tools/conan_setup.sh` を実行済みであることを前提とします。
 
 ```bash
 # 初期構成（toolchain ファイルで Conan パッケージを有効化）
@@ -98,7 +99,7 @@ project_root/
 │   └── linux-rhel9           # Conan ビルドプロファイル（git 管理）
 ├── vendor/
 │   ├── .gitkeep              # git 管理のためのプレースホルダ
-│   ├── conan_toolchain.cmake # Conan 生成ツールチェーン（参照用）
+│   ├── conan_toolchain.cmake # Conan 生成ツールチェーン（git管理外）
 │   └── full_deploy/
 │       └── host/
 │           ├── spdlog/1.12.0/      # headers + libs
@@ -112,7 +113,7 @@ project_root/
 
 ### vendor/ の CMake 統合の仕組み
 
-`conan install` により `vendor/conan_toolchain.cmake` と各パッケージの `*Config.cmake` が生成されます。  
+`conan install` により `vendor/conan_toolchain.cmake` と各パッケージの `*Config.cmake` が生成されます（いずれも git 管理外）。  
 cmake 構成時にツールチェーンファイルを指定することで、`find_package` がこれらを自動解決します：
 
 ```bash
@@ -229,6 +230,13 @@ CMake Error: [Conan] vendor/full_deploy が見つかりません。
 
 **原因:** `vendor/` が削除または破損している  
 **対処:** `bash tools/conan_setup.sh` を実行して `vendor/` を再生成してください。
+
+---
+
+### `vendor/conan_toolchain.cmake が見つかりません` エラー
+
+**原因:** Conan 自動生成ファイルは git 管理外のため、クローン直後は未生成  
+**対処:** `bash tools/conan_setup.sh` を実行して生成してください。
 
 ---
 

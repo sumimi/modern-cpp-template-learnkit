@@ -6,9 +6,17 @@
 # sampleappをリンクした一貫したテストビルドを提供します。
 #
 
-# GoogleTest の検出（gmock含む場合も同様）
-set(CMAKE_PREFIX_PATH "/opt/gtest/gtest-1.14")
-find_package(GTest REQUIRED)
+# GoogleTest の検出（Conan vendor の CMakeDeps が提供する Config を優先）
+find_package(GTest CONFIG REQUIRED)
+
+# 一部環境の GTest は NOCONFIG のみ提供されるため、
+# RelWithDebInfo / MinSizeRel でも解決できるようにマップする。
+foreach(_gtest_target GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+    if(TARGET ${_gtest_target})
+        set_property(TARGET ${_gtest_target} PROPERTY MAP_IMPORTED_CONFIG_RELWITHDEBINFO NOCONFIG)
+        set_property(TARGET ${_gtest_target} PROPERTY MAP_IMPORTED_CONFIG_MINSIZEREL NOCONFIG)
+    endif()
+endforeach()
 
 # カバレッジ用スクリプトの読み込み（GCC + ENABLE_COVERAGE 用）
 include(${CMAKE_SOURCE_DIR}/tools/coverage.cmake)
@@ -31,6 +39,9 @@ target_compile_features(unit_tests PRIVATE cxx_std_17)
 # ヘッダファイルの探索パスを指定
 # 各モジュールの include を使用するためトップレベルを追加
 target_include_directories(unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# システムspdlodでは bundled fmt ヘッダが存在しない構成があるため外部fmtを使用
+target_compile_definitions(unit_tests PRIVATE SPDLOG_FMT_EXTERNAL)
 
 target_link_libraries(unit_tests PRIVATE
     GTest::gtest

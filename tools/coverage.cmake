@@ -1,7 +1,7 @@
 # =============================================================================
 # tools/coverage.cmake
 #
-# このスクリプトは、GCCコンパイラを使用している場合にカバレッジ測定を有効化する
+# このスクリプトは、GCC/Clang コンパイラを使用している場合にカバレッジ測定を有効化する
 # ヘルパー関数を提供します。
 #
 # 主な機能:
@@ -13,7 +13,7 @@
 # - CMakeLists.txt 内で `enable_coverage_if_gcc(<ターゲット名>)` を呼び出す
 #
 # 注意事項:
-# - このスクリプトは GCC 環境でのみ動作します。
+# - このスクリプトは GCC / Clang 環境で動作します。
 # - `ENABLE_COVERAGE` オプションが ON の場合にのみ有効化されます。
 # =============================================================================
 
@@ -23,8 +23,8 @@
 # 引数:
 # - target_name: カバレッジを有効化するターゲット名
 function(enable_coverage_if_gcc target_name)
-    # `ENABLE_COVERAGE` オプションが ON で、コンパイラが GCC の場合にのみ実行
-    if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    # `ENABLE_COVERAGE` オプションが ON で、コンパイラが GCC/Clang の場合にのみ実行
+    if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         # カバレッジ有効化のメッセージを出力
         message(STATUS "🔧 Coverage enabled for target: ${target_name}")
 

@@ -37,18 +37,18 @@ tools/coverage.cmake              # カバレッジ有効化ヘルパー関数
 
 ```bash
 # 通常ビルド
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 
 # カバレッジ有効ビルド（再構成が必要）
-cmake -DENABLE_COVERAGE=ON -S . -B build
+cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 cmake --build build
 
 # ビルドを完全にリセット
 cmake --build build --target clean_all
 # または
 rm -rf build
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 ```
 
 ## CMake オプション
@@ -120,8 +120,8 @@ docs/html/            # Doxygen 出力
 
 | 問題 | 対処法 |
 |------|--------|
-| 新しい `.cpp` ファイルが認識されない | `cmake -S . -B build` で再構成する |
-| カバレッジが計測されない | `cmake -DENABLE_COVERAGE=ON -S . -B build` で再構成する |
+| 新しい `.cpp` ファイルが認識されない | `cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` で再構成する |
+| カバレッジが計測されない | `cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake` で再構成する |
 | テストが古いバイナリで実行される | `cmake --build build` でリビルドしてから実行 |
 | clang-tidy が見つからない | `dnf install clang-tools-extra` でインストール |
 
@@ -156,7 +156,7 @@ cmake --build build --clean-first
 ### (4) `compile_commands.json` の生成（clang-tidy / IDE 連携）
 
 ```bash
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S . -B build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S . -B build -DCMAKE_TOOLCHAIN_FILE=vendor/conan_toolchain.cmake
 # build/compile_commands.json が生成される
 # clang-tidy や clangd（LSP）がインクルードパスを正しく解決できるようになる
 ```

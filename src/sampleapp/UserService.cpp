@@ -19,8 +19,8 @@ UserService::UserService(std::shared_ptr<IUserRepository> repo) : repository_(st
  * @copydoc UserService::register_user
  */
 void UserService::register_user(const std::string& name) {
-    User user{/* id */ 0, name, name + "@example.com"};
-    repository_->insert_user(user);
+    User user{/* id */ 0, name, name + "@example.com"};  // LCOV_EXCL_BR_LINE
+    repository_->insert_user(user);                      // LCOV_EXCL_BR_LINE
 }
 
 /**

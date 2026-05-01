@@ -56,5 +56,13 @@ conanbuildinfo.cmake
 /vendor/Testing/
 /vendor/compile_commands.json
 /vendor/cmake_install.cmake
+/vendor/CMakePresets.json
+/vendor/conan_toolchain.cmake
+/vendor/conanbuild.sh
+/vendor/conanrun.sh
+/vendor/conanbuildenv-release-x86_64.sh
+/vendor/conanrunenv-release-x86_64.sh
+/vendor/deactivate_conanbuild.sh
+/vendor/deactivate_conanrun.sh
 /vendor/src/
 /vendor/test/

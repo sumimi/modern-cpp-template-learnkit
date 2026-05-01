@@ -27,11 +27,44 @@ set -e  # 1コマンドでも失敗したら即終了
 
 #==============================================================================
 # 設定項目
+PROJECT_ROOT="$(pwd)"
 BUILD_DIR="build"
 UNIT_TEST_EXEC="$BUILD_DIR/bin/unit_tests"
 COVERAGE_DIR="coverage_report"
 COVERAGE_INFO="coverage.info"
 FILTERED_INFO="coverage_filtered.info"
+LCOV_CONFIG=".lcovrc"
+
+# .lcovrc が存在すればプロジェクト内設定を明示的に適用
+LCOV_CONFIG_ARGS=()
+if [ -f "$LCOV_CONFIG" ]; then
+  LCOV_CONFIG_ARGS=(--config-file "$LCOV_CONFIG")
+else
+  echo "⚠️ 警告: [$LCOV_CONFIG] が見つかりません。システム設定で実行します。"
+fi
+
+# lcov/genhtml の --branch-coverage 対応可否を判定（古い版との互換性確保）
+LCOV_BRANCH_ARGS=()
+GENHTML_BRANCH_ARGS=()
+if lcov --help 2>&1 | grep -q -- '--branch-coverage'; then
+  LCOV_BRANCH_ARGS=(--branch-coverage)
+fi
+if genhtml --help 2>&1 | grep -q -- '--branch-coverage'; then
+  GENHTML_BRANCH_ARGS=(--branch-coverage)
+fi
+
+# lcov の ignore-errors はバージョンごとに許容値が異なるため動的に切替
+LCOV_CAPTURE_IGNORE_ARGS=()
+LCOV_REMOVE_IGNORE_ARGS=()
+if lcov --help 2>&1 | grep -q -- '--ignore-errors'; then
+  if lcov --help 2>&1 | grep -q 'mismatch'; then
+    LCOV_CAPTURE_IGNORE_ARGS=(--ignore-errors mismatch)
+    LCOV_REMOVE_IGNORE_ARGS=(--ignore-errors mismatch)
+  else
+    LCOV_CAPTURE_IGNORE_ARGS=(--ignore-errors gcov)
+    LCOV_REMOVE_IGNORE_ARGS=(--ignore-errors source)
+  fi
+fi
 
 #==============================================================================
 # 必須コマンド存在チェック
@@ -76,24 +109,24 @@ ctest --test-dir "$BUILD_DIR" --output-on-failure
 echo "📈 カバレッジデータを収集中..."
 
 # src/ 以下の gcda/gcno に対応するため明示的にサブディレクトリも指定
-# --ignore-errors mismatch: GCC最適化による行番号不一致を無視
-lcov --capture --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_INFO" --ignore-errors mismatch
+# --ignore-errors は lcov バージョン互換を見て自動選択
+lcov "${LCOV_CONFIG_ARGS[@]}" --capture --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_INFO" "${LCOV_CAPTURE_IGNORE_ARGS[@]}" "${LCOV_BRANCH_ARGS[@]}"
 
 #==============================================================================
-# 不要ファイル除外（標準ライブラリ等）
-echo "🚫 不要ファイル（標準ライブラリ・gtest等）を除外中..."
-lcov --remove "$BUILD_DIR/$COVERAGE_INFO" \
-    '/usr/include/*' \
-    '*/gtest/*' \
-    '*/c++/*' \
-    '*/cxxopts/*' \
-    '*/test/*' \
-    --ignore-errors mismatch,unused \
+# プロジェクトファイルのみ抽出（OSS・外部ライブラリを自動除外）
+echo "🎯 プロジェクトファイル（src/ / include/）のみ抽出中..."
+lcov "${LCOV_CONFIG_ARGS[@]}" --extract "$BUILD_DIR/$COVERAGE_INFO" \
+    "$PROJECT_ROOT/src/*" \
+    "$PROJECT_ROOT/include/*" \
+    "${LCOV_REMOVE_IGNORE_ARGS[@]}" \
     -o "$BUILD_DIR/$FILTERED_INFO"
 
 #==============================================================================
 # HTMLレポート生成
 echo "📝 HTMLカバレッジレポートを生成中..."
-genhtml "$BUILD_DIR/$FILTERED_INFO" --output-directory "$BUILD_DIR/$COVERAGE_DIR"
+genhtml "${LCOV_CONFIG_ARGS[@]}" "$BUILD_DIR/$FILTERED_INFO" \
+    --output-directory "$BUILD_DIR/$COVERAGE_DIR" \
+    --prefix "$PROJECT_ROOT/" \
+    "${GENHTML_BRANCH_ARGS[@]}"
 
 echo "✅ カバレッジレポートが [$BUILD_DIR/$COVERAGE_DIR] に生成されました！"

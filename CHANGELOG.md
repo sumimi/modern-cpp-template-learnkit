@@ -7,6 +7,119 @@
 
 ---
 
+## [1.3.0] - 2026-05-01
+
+### C1（分岐）カバレッジ対応
+
+lcov の分岐カバレッジ（C1）を標準で有効化し、カバレッジ計測環境を整備。
+
+#### 追加
+- `.lcovrc`：C1（分岐）カバレッジをプロジェクトデフォルトで有効化する設定ファイル
+- `.github/skills/cpp-coverage/SKILL.md`：lcov/genhtml によるカバレッジ測定・LCOV 除外コメントガイド（新規 Agent Skills）
+
+#### 変更
+- `tools/generate_coverage.sh`：`.lcovrc` 対応・除外フィルタ整理
+- `tools/coverage.cmake`：CMake 側のカバレッジターゲット設定を改善
+- `README.md`・`docs/SETUP_GUIDE.md`：カバレッジ測定手順を更新
+
+---
+
+### Conan 生成ファイルの整理（vendor/ を .gitignore 管理へ）
+
+`conan install` 実行ごとに再生成される `vendor/` 配下のファイルを Git 管理から除外。
+
+#### 変更
+- `.gitignore`：`vendor/` 配下の Conan 生成スクリプト・Toolchain ファイルを除外ルールに追加
+
+#### 削除（.gitignore 管理へ移行）
+- `vendor/CMakePresets.json`
+- `vendor/conan_toolchain.cmake`
+- `vendor/conanbuild.sh` / `vendor/conanrun.sh`
+- `vendor/conanbuildenv-release-x86_64.sh` / `vendor/conanrunenv-release-x86_64.sh`
+- `vendor/deactivate_conanbuild.sh` / `vendor/deactivate_conanrun.sh`
+
+---
+
+### CMake ビルド設定の改善（RelWithDebInfo / MinSizeRel 対応）
+
+Conan 生成ターゲットが `Release` 構成のみを持つ場合でも、カバレッジ用の `RelWithDebInfo` ビルドでリンクできるよう設定を追加。
+
+#### 変更
+- `CMakeLists.txt`：`CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO` / `CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL` を追加
+- `CMakeUserPresets.json`：`vendor/CMakePresets.json` への依存を排除し、version 2 の独立プリセット形式に刷新
+- `test/CMakeLists.txt`：GTest 検出を `/opt/gtest` ハードコードから Conan CMakeDeps の `CONFIG` モードに変更。`RelWithDebInfo` 向け設定マップと `SPDLOG_FMT_EXTERNAL` 定義を追加
+
+---
+
+### テストケースの追加
+
+#### 変更
+- `test/unit/sampleapp/UserServiceTest.cpp`：テストケースを 2 件追加
+  - `operator==` が異なる `User` 同士を正しく `false` と判定することを検証
+  - `get_user_by_id()` がリポジトリ未登録 ID に対して `std::nullopt` を返すことを検証
+
+---
+
+### ドキュメント・Agent Skills 更新
+
+#### 変更
+- `.github/copilot-instructions.md`・`.github/skills/cpp-cmake/SKILL.md`：`cpp-coverage` スキル追加に合わせて更新
+- `docs/CONAN_SETUP.md`：Conan セットアップ手順を更新
+
+---
+
+### 既存ユーザー向け移行ガイド
+
+このテンプレートをすでにクローンして利用しているユーザーは、以下の手順で変更を反映してください。
+
+#### 1. 新規追加ファイル（そのまま配置）
+
+リポジトリに存在しないファイルです。コピーしてそのまま配置してください。
+
+| ファイル | 内容 |
+|----------|------|
+| `.lcovrc` | C1（分岐）カバレッジのデフォルト設定 |
+| `.github/skills/cpp-coverage/SKILL.md` | カバレッジ測定スキルガイド |
+
+#### 2. 上書き推奨ファイル
+
+独自カスタマイズがなければそのまま上書きしてください。
+
+| ファイル | 内容 |
+|----------|------|
+| `tools/generate_coverage.sh` | `.lcovrc` 対応・除外フィルタ整理 |
+| `tools/coverage.cmake` | CMake カバレッジターゲット設定の改善 |
+
+#### 3. マージが必要なファイル
+
+ユーザー独自の設定が含まれている可能性があります。差分を確認しながらマージしてください。
+
+| ファイル | マージ箇所 |
+|----------|-----------|
+| `CMakeLists.txt` | `CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO` / `_MINSIZEREL` の 2 行を追加 |
+| `CMakeUserPresets.json` | `vendor/CMakePresets.json` の `include` 参照を削除し、独立したプリセット定義に書き換え |
+| `test/CMakeLists.txt` | `find_package(GTest)` の形式変更、`foreach` による設定マップ追加、`SPDLOG_FMT_EXTERNAL` 定義追加 |
+| `.gitignore` | `vendor/` 配下の Conan 生成ファイルを除外ルールに追加 |
+
+#### 4. Git 管理から除外するファイル（tracked な場合は手動で除外）
+
+`.gitignore` に追加したファイルが既に Git 管理下にある場合、以下を実行してください。
+
+```bash
+git rm --cached vendor/CMakePresets.json
+git rm --cached vendor/conan_toolchain.cmake
+git rm --cached vendor/conanbuild.sh
+git rm --cached vendor/conanbuildenv-release-x86_64.sh
+git rm --cached vendor/conanrun.sh
+git rm --cached vendor/conanrunenv-release-x86_64.sh
+git rm --cached vendor/deactivate_conanbuild.sh
+git rm --cached vendor/deactivate_conanrun.sh
+```
+
+> これらのファイルは `conan install` 実行時に毎回再生成されるため、Git 管理は不要です。
+
+---
+
 ## [1.2.3] - 2026-05-01
 
 ### 変更

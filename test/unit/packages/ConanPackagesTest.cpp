@@ -58,7 +58,7 @@ TEST(SpdlogTest, LogLevelFilteringWorks) {
 // ============================================================================
 // cxxopts — コマンドライン引数パーサ（header-only）
 // ============================================================================
-#include <cxxopts.hpp>
+#include <cxxopts/cxxopts.hpp>
 
 TEST(CxxoptsTest, ParsesStringOption) {
     // Arrange
