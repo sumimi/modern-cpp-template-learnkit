@@ -13,7 +13,9 @@
 #   cmake --build build --target coverage
 #
 # 生成物:
-#   - build/coverage.info              (生のカバレッジデータ)
+#   - build/coverage_baseline.info     (初期値カバレッジデータ)
+#   - build/coverage.info              (実行後カバレッジデータ)
+#   - build/coverage_merged.info       (初期値＋実行結果のマージデータ)
 #   - build/coverage_filtered.info     (不要ファイル除外後のカバレッジデータ)
 #   - build/coverage_report/           (HTML形式のカバレッジレポート)
 #
@@ -31,7 +33,9 @@ PROJECT_ROOT="$(pwd)"
 BUILD_DIR="build"
 UNIT_TEST_EXEC="$BUILD_DIR/bin/unit_tests"
 COVERAGE_DIR="coverage_report"
+COVERAGE_BASELINE_INFO="coverage_baseline.info"
 COVERAGE_INFO="coverage.info"
+MERGED_INFO="coverage_merged.info"
 FILTERED_INFO="coverage_filtered.info"
 LCOV_CONFIG=".lcovrc"
 
@@ -97,7 +101,16 @@ fi
 #==============================================================================
 # 初回クリーン処理
 echo "🧹 古いカバレッジデータを削除中..."
-rm -rf "$BUILD_DIR/$COVERAGE_DIR" "$BUILD_DIR/$COVERAGE_INFO" "$BUILD_DIR/$FILTERED_INFO"
+rm -rf "$BUILD_DIR/$COVERAGE_DIR" \
+  "$BUILD_DIR/$COVERAGE_BASELINE_INFO" \
+  "$BUILD_DIR/$COVERAGE_INFO" \
+  "$BUILD_DIR/$MERGED_INFO" \
+  "$BUILD_DIR/$FILTERED_INFO"
+
+#==============================================================================
+# 初期値カバレッジデータ収集（未実行ファイルを0%として可視化）
+echo "🧱 初期値カバレッジデータを収集中..."
+lcov "${LCOV_CONFIG_ARGS[@]}" --capture --initial --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_BASELINE_INFO" "${LCOV_CAPTURE_IGNORE_ARGS[@]}" "${LCOV_BRANCH_ARGS[@]}"
 
 #==============================================================================
 # ユニットテスト実行
@@ -113,9 +126,14 @@ echo "📈 カバレッジデータを収集中..."
 lcov "${LCOV_CONFIG_ARGS[@]}" --capture --directory "$BUILD_DIR" --directory "$BUILD_DIR/src" --output-file "$BUILD_DIR/$COVERAGE_INFO" "${LCOV_CAPTURE_IGNORE_ARGS[@]}" "${LCOV_BRANCH_ARGS[@]}"
 
 #==============================================================================
+# 初期値と実行結果をマージ
+echo "🔗 初期値と実行結果をマージ中..."
+lcov "${LCOV_CONFIG_ARGS[@]}" -a "$BUILD_DIR/$COVERAGE_BASELINE_INFO" -a "$BUILD_DIR/$COVERAGE_INFO" -o "$BUILD_DIR/$MERGED_INFO"
+
+#==============================================================================
 # プロジェクトファイルのみ抽出（OSS・外部ライブラリを自動除外）
 echo "🎯 プロジェクトファイル（src/ / include/）のみ抽出中..."
-lcov "${LCOV_CONFIG_ARGS[@]}" --extract "$BUILD_DIR/$COVERAGE_INFO" \
+lcov "${LCOV_CONFIG_ARGS[@]}" --extract "$BUILD_DIR/$MERGED_INFO" \
     "$PROJECT_ROOT/src/*" \
     "$PROJECT_ROOT/include/*" \
     "${LCOV_REMOVE_IGNORE_ARGS[@]}" \

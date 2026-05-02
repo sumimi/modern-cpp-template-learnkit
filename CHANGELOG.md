@@ -7,6 +7,18 @@
 
 ---
 
+## [1.3.1] - 2026-05-02
+
+### 変更
+- `tools/generate_coverage.sh`：lcov ベースラインキャプチャを追加
+  - `lcov --capture --initial` でテスト実行前のベースライン収集を追加
+  - `baseline.info` と実測 `coverage.info` を `lcov -a` でマージ
+  - `extract` の入力を `merged.info` に変更し、未実行ファイルを 0% として可視化
+  - クリーン対象に `coverage_baseline.info` / `coverage_merged.info` を追加
+  - 生成物コメントに baseline / merged の説明を追記
+
+---
+
 ## [1.3.0] - 2026-05-01
 
 ### C1（分岐）カバレッジ対応
